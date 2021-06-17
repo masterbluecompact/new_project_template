@@ -56,8 +56,15 @@ contract MultiDistributable{
 
 
 	function withdraw(uint256 amount) public payable onlyOwner{
-		require(ownerBalance(msg.sender) >= amount, "the amount to withdraw cannot be bigger than your balance");
+		require(ownerBalance(msg.sender) >= amount, "the amount to withdraw cannot be larger than your balance");
 		(bool success, ) = msg.sender.call{value:amount}("");
+		require(success, "Transfer failed.");
+	}
+
+
+	function send(uint256 amount, address receiver)public payable onlyOwner{
+		require(ownerBalance(msg.sender) >= amount, "the amount to send cannot be larger than your balance");
+		(bool success, ) = receiver.call{value:amount}("");
 		require(success, "Transfer failed.");
 	}
 
